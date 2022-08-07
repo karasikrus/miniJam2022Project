@@ -152,7 +152,10 @@ public class GameController : MonoBehaviour
 
                 Robot robot = _robotsStack.Pop();
                 robot.DestroyRobot();
-                _robotsStack.Peek().DoRotate();
+                if(_robotsStack.Count > 0)
+                {
+                    _robotsStack.Peek().DoRotate();
+                }
             }
             else
             {
