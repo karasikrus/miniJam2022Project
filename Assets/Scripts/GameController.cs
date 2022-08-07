@@ -24,6 +24,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private float _startTimer;
     [SerializeField] private Button _goButton;
 
+
+    [SerializeField] private DoorMove _rightDoor;
+    [SerializeField] private DoorMove _leftDoor;
+
     private bool _timeGo = true;
     private bool _goTimer = true;
     private Transform _nextTranform;
@@ -129,7 +133,7 @@ public class GameController : MonoBehaviour
 
     public void PunchRobot(int playerIndex)
     {
-        if(_robotsStack != null)
+        if(_robotsStack.Count > 0)
         {
             if (_robotsStack.Peek().GetTypeRobot() == playerIndex)
             {
@@ -172,6 +176,9 @@ public class GameController : MonoBehaviour
 
     private void GoNextLevel()
     {
+        _rightDoor.GoStartPositionDoor();
+        _leftDoor.GoStartPositionDoor();
+        _leftDoor.PlayCloseSound();
         _level++;
         PlayerPrefs.SetInt("Level", _level);
         StartCoroutine(DoNextLevel());
@@ -191,7 +198,7 @@ public class GameController : MonoBehaviour
 
     IEnumerator DoNextLevel()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

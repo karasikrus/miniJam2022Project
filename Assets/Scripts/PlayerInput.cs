@@ -29,7 +29,7 @@ public class PlayerInput : MonoBehaviour
     private void Start()
     {
         _gameController = FindObjectOfType<GameController>();
-        _delay = 5;
+        _delay = 0;
     }
 
     private void Update()
@@ -60,6 +60,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (_delay > 0.2)
         {
+            _buttonAttack.gameObject.GetComponent<AudioSource>().Play();
             ChangeSprite(imageAttack, _spriteAttackUz, _spriteAttack);
             _gameController.PunchRobot(0);
             _delay = 0;
@@ -71,6 +72,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (_delay > 0.2)
         {
+            _buttonDeffense.gameObject.GetComponent<AudioSource>().Play();
             ChangeSprite(imageDefence, _spriteDefenceUz, _spriteDefence);
             _gameController.PunchRobot(1);
             _delay = 0;
@@ -82,6 +84,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (_delay > 0.2)
         {
+            _buttonHacking.gameObject.GetComponent<AudioSource>().Play();
             ChangeSprite(imageHack, _spriteHackUz, _spriteHack);
             _gameController.PunchRobot(2);
             _delay = 0;
