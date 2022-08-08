@@ -38,6 +38,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private DoorMove _rightDoor;
     [SerializeField] private DoorMove _leftDoor;
 
+    [SerializeField] private float _correctRuleRowOffset;
+
     private bool _timeGo = true;
     private bool _goTimer = true;
     private Transform _nextTranform;
@@ -49,6 +51,7 @@ public class GameController : MonoBehaviour
         _robotsStack = _spawner.Spawn();
         _textMeshProTimer.text = TimeSpan.FromSeconds(_startTimer).ToString("ss") + ":" + TimeSpan.FromSeconds(_startTimer).ToString("ff");
         //_textMeshProTimer.text = Mathf.Round(_startTimer).ToString()
+        highlightRuleRow(0);
 
         if (_level == 0)
         {
@@ -79,6 +82,7 @@ public class GameController : MonoBehaviour
                 if (robot.GetNumber() % 2 == 0 && robot.GetColor() == "Red")
                 {
                     robot.SetTypeRobot(2);
+                    robot.correctRule = 3;
                 }
             }
 
@@ -118,6 +122,7 @@ public class GameController : MonoBehaviour
                     if (afterRobot != null && afterRobot.GetColor() == "Yellow")
                     {
                         robot.SetTypeRobot(2);
+                        robot.correctRule = 5;
                     }
                 }
             }
@@ -140,6 +145,7 @@ public class GameController : MonoBehaviour
                     if (afterRobot != null && afterRobot.GetColor() == "Red")
                     {
                         robot.SetTypeRobot(2);
+                        robot.correctRule = 6;
                     }
 
                 }
@@ -154,6 +160,7 @@ public class GameController : MonoBehaviour
                 if (nextRobot != null && nextRobot.GetColor() == "Yellow")
                 {
                     robot.SetTypeRobot(1);
+                    robot.correctRule = 7;
                 }
             }
         }
@@ -186,11 +193,30 @@ public class GameController : MonoBehaviour
             GoNextLevel();
        }
     }
+    public void highlightRuleRow(int ruleNumber)
+    {
+        GameObject highLighter = GameObject.FindGameObjectWithTag("ruleHighlighter");
+        Image image = highLighter.GetComponent<Image>();
+        if (ruleNumber == 0)
+        {
+            image.enabled = false;
+        }
+        else
+        {
+            image.enabled = true;
+
+            int correctRow = _level + 1 - ruleNumber;
+
+            image.transform.localPosition = new Vector3(-0.40021f, 42.8f + correctRow * _correctRuleRowOffset, 0);
+        }
+    }
 
     public void PunchRobot(int playerIndex)
     {
         if(_robotsStack.Count > 0)
         {
+            int correctRule = _robotsStack.Peek().correctRule;
+            highlightRuleRow(correctRule);
             if (_robotsStack.Peek().GetTypeRobot() == playerIndex)
             {
                 int count = 0;
