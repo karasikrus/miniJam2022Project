@@ -12,6 +12,8 @@ public class Robot : MonoBehaviour
     [SerializeField] private Sprite _spriteBlue;
     [SerializeField] private float _timeMove;
 
+    public int correctRule = 0;
+
     private Transform _oldPosition;
     private SpriteRenderer _spriteRenderer;
     private int _type;
@@ -68,18 +70,22 @@ public class Robot : MonoBehaviour
             _spriteRenderer.sprite = _spriteRed;
             _color = "Red";
             _type = 1;
+            correctRule = 2;
+            
         }
         else if(_colorInt == 1)
         {
             _spriteRenderer.sprite = _spriteYellow;
             _color = "Yellow";
             _type = 0;
+            correctRule = 1;
         }
         else
         {
             _spriteRenderer.sprite = _spriteBlue;
             _color = "Blue";
             _type = 0;
+            correctRule = 4;
         }
 
     }
