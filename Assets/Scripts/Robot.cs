@@ -146,7 +146,7 @@ public class Robot : MonoBehaviour
 
     public void SetNumber(int number)
     {
-        number++;
+        number = 6 - number;
         _number = number;
     }
 

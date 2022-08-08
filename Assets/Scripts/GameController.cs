@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class GameController : MonoBehaviour
 {
@@ -22,7 +23,6 @@ public class GameController : MonoBehaviour
     [SerializeField] private int _level;
     [SerializeField] private TextMeshProUGUI _textMeshProTimer;
     [SerializeField] private TextMeshProUGUI _textMeshProRules;
-    [SerializeField] private TextMeshProUGUI _textMeshProLevel;
     [TextArea] [SerializeField] private string[] _rulesArray;
 
     [SerializeField] private Transform _endPosition;
@@ -42,9 +42,10 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         _robotsStack = _spawner.Spawn();
-        _textMeshProTimer.text = Mathf.Round(_startTimer).ToString();
+        _textMeshProTimer.text = TimeSpan.FromSeconds(_startTimer).ToString("ss") + ":" + TimeSpan.FromSeconds(_startTimer).ToString("ff");
+        //_textMeshProTimer.text = Mathf.Round(_startTimer).ToString()
 
         if (_level == 0)
         {
@@ -57,8 +58,6 @@ public class GameController : MonoBehaviour
                 _level = 1;
             }
         }
-
-        _textMeshProLevel.text = _level.ToString();
 
         if (_rulesArray.Length >= _level)
         {
@@ -124,12 +123,36 @@ public class GameController : MonoBehaviour
 
         if (_level > 4)
         {
+            foreach (Robot robot in _robotsStack)
+            {
+                if (robot.GetColor() == "Yellow")
+                {
+                    Robot nextRobot = robot.GetNextRobot();
+                    if (nextRobot != null && nextRobot.GetColor() == "Red")
+                    {
+                        robot.SetTypeRobot(2);
+                    }
 
+                    Robot afterRobot = robot.GetAfterRobot();
+                    if (afterRobot != null && afterRobot.GetColor() == "Red")
+                    {
+                        robot.SetTypeRobot(2);
+                    }
+
+                }
+            }
         }
 
         if (_level > 5)
         {
-
+            foreach (Robot robot in _robotsStack)
+            {
+                Robot nextRobot = robot.GetNextRobot();
+                if (nextRobot != null && nextRobot.GetColor() == "Yellow")
+                {
+                    robot.SetTypeRobot(1);
+                }
+            }
         }
 
 
@@ -140,7 +163,7 @@ public class GameController : MonoBehaviour
         if (_goTimer)
         {
             _startTimer -= Time.deltaTime;
-            _textMeshProTimer.text = Mathf.Round(_startTimer).ToString();
+            _textMeshProTimer.text = TimeSpan.FromSeconds(_startTimer).ToString("ss") + ":" + TimeSpan.FromSeconds(_startTimer).ToString("ff");
         }
 
         if(_startTimer < 0 && _timeGo)
@@ -168,7 +191,7 @@ public class GameController : MonoBehaviour
             if (_robotsStack.Peek().GetTypeRobot() == playerIndex)
             {
                 int count = 0;
-                _startTimer = 5f;
+                _startTimer = 4f;
 
                 foreach (Robot robotFor in _robotsStack)
                 {
@@ -239,7 +262,7 @@ public class GameController : MonoBehaviour
             button.gameObject.SetActive(true);
         }
         _robotsStack.Peek().DoRotate();
-        _startTimer = 5f;
+        _startTimer = 4f;
     }
 
     public void RetunrneGame()
