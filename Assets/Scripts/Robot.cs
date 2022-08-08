@@ -9,6 +9,7 @@ public class Robot : MonoBehaviour
 {
     [SerializeField] private Sprite _spriteRed;
     [SerializeField] private Sprite _spriteYellow;
+    [SerializeField] private Sprite _spriteBlue;
     [SerializeField] private float _timeMove;
 
     private Transform _oldPosition;
@@ -16,7 +17,10 @@ public class Robot : MonoBehaviour
     private int _type;
     private GameController _gameController;
     private int _number;
+
     private Robot _nextRobot;
+    private Robot _afterRobot;
+
     private string _color;
     private bool _doRotate = false;
     private float _timer;
@@ -26,8 +30,11 @@ public class Robot : MonoBehaviour
 
     [SerializeField] private int _rotateIntZ;
 
+    private AudioSource _source;
+
     private void Awake()
     {
+        _source = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _gameController = FindObjectOfType<GameController>();
         _luk = FindObjectOfType<LukScript>();
@@ -62,12 +69,19 @@ public class Robot : MonoBehaviour
             _color = "Red";
             _type = 1;
         }
-        else
+        else if(_colorInt == 1)
         {
             _spriteRenderer.sprite = _spriteYellow;
             _color = "Yellow";
             _type = 0;
         }
+        else
+        {
+            _spriteRenderer.sprite = _spriteBlue;
+            _color = "Blue";
+            _type = 0;
+        }
+
     }
 
     public Transform GoNextPozition(Transform _nextposition)
@@ -77,6 +91,11 @@ public class Robot : MonoBehaviour
         _doRotate = true;
         StartCoroutine(DontRotate());
         return _oldPosition;
+    }
+
+    public void PlayDeadSound()
+    {
+        _source.Play();
     }
 
     public void DoRotate()
@@ -95,9 +114,19 @@ public class Robot : MonoBehaviour
         return _nextRobot;
     }
 
+    public Robot GetAfterRobot()
+    {
+        return _afterRobot;
+    }
+
     public void SetNextRobot(Robot robot)
     {
         _nextRobot = robot;
+    }
+
+    public void SetAfterRobot(Robot robot)
+    {
+        _afterRobot = robot;
     }
 
     public int GetTypeRobot()

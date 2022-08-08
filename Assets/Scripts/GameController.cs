@@ -7,10 +7,15 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] GameObject _ScreenDead;
+
+    private bool _isActiveGame = false;
+
     [SerializeField] private Spawner _spawner;
     [SerializeField] private GameObject _gameObjectDead;
 
     [SerializeField] private Button[] _buttons;
+    [SerializeField] private Button[] _endButtons;
 
     private Stack<Robot> _robotsStack;
     private bool _goNextLevel = true;
@@ -21,6 +26,8 @@ public class GameController : MonoBehaviour
     [TextArea] [SerializeField] private string[] _rulesArray;
 
     [SerializeField] private Transform _endPosition;
+    [SerializeField] private Transform _DeadPosition;
+
     [SerializeField] private float _startTimer;
     [SerializeField] private Button _goButton;
 
@@ -67,7 +74,7 @@ public class GameController : MonoBehaviour
         {
             foreach (Robot robot in _robotsStack)
             {
-                if (robot.GetNumber() % 2 == 0)
+                if (robot.GetNumber() % 2 == 0 && robot.GetColor() == "Red")
                 {
                     robot.SetTypeRobot(2);
                 }
@@ -93,15 +100,38 @@ public class GameController : MonoBehaviour
 
         if(_level > 3)
         {
+            //foreach (Robot robot in _robotsStack)
+            //{
+            //   if(robot.GetNumber() < 4 && robot.GetColor() == "Red")
+            //   {
+            //        robot.SetTypeRobot(2);
+            //   }
+            //}
+
             foreach (Robot robot in _robotsStack)
             {
-               if(robot.GetNumber() < 4 && robot.GetColor() == "Red")
-               {
-                    robot.SetTypeRobot(2);
-               }
+                if(robot.GetColor() == "Blue")
+                {
+                    Robot nextRobot = robot.GetNextRobot();
+                    if (nextRobot != null && nextRobot.GetColor() == "Yellow")
+                    {
+                        robot.SetTypeRobot(2);
+                    }
+                }
             }
 
         }
+
+        if (_level > 4)
+        {
+
+        }
+
+        if (_level > 5)
+        {
+
+        }
+
 
     }
 
@@ -117,7 +147,7 @@ public class GameController : MonoBehaviour
         {
             StartGame();
         }
-        else if (_startTimer < 0)
+        else if (_startTimer < 0 && _isActiveGame)
         {
             GameOver();
         }
@@ -171,7 +201,22 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         _gameObjectDead.SetActive(true);
+        _isActiveGame = false;
+        if(_robotsStack.Count > 0)
+        {
+            _robotsStack.Peek().GoNextPozition(_DeadPosition);
+            _robotsStack.Peek().PlayDeadSound();
+        }
         _goTimer = false;
+        foreach (Button button in _buttons)
+        {
+            button.gameObject.SetActive(false);
+        }
+        foreach (Button button in _endButtons)
+        {
+            button.gameObject.SetActive(true);
+        }
+        _ScreenDead.SetActive(true);
     }
 
     private void GoNextLevel()
@@ -187,6 +232,7 @@ public class GameController : MonoBehaviour
     public void StartGame()
     {
         _timeGo = false;
+        _isActiveGame = true;
         _goButton.gameObject.SetActive(false);
         foreach (Button button in _buttons)
         {
@@ -194,6 +240,24 @@ public class GameController : MonoBehaviour
         }
         _robotsStack.Peek().DoRotate();
         _startTimer = 5f;
+    }
+
+    public void RetunrneGame()
+    {
+        if(_robotsStack.Count > 0)
+        {
+            _robotsStack.Peek().gameObject.SetActive(false);
+        }
+        _ScreenDead.GetComponent<GameImageScript>().GoOpacityMinus();
+        _rightDoor.GoStartPositionDoor();
+        _leftDoor.GoStartPositionDoor();
+        _leftDoor.PlayCloseSound();
+        StartCoroutine(DoNextLevel());
+    }
+
+    public bool GetIsActiveGame()
+    {
+        return _isActiveGame;
     }
 
     IEnumerator DoNextLevel()

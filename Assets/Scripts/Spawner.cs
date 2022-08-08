@@ -16,12 +16,28 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < _spawnCount; i++)
         {
             Robot robot = Instantiate(_robotPref, _spawnPoints[i].position, Quaternion.identity, _spawnPosition);
-            robot.SetCollor(Random.Range(0, 2));
+            if (PlayerPrefs.HasKey("Level"))
+            {
+                if(PlayerPrefs.GetInt("Level") > 2)
+                {
+                    robot.SetCollor(Random.Range(0, 3));
+                }
+                else
+                {
+                    robot.SetCollor(Random.Range(0, 2));
+                }
+            }
+            else
+            {
+                robot.SetCollor(Random.Range(0, 2));
+            }
+
             robot.SetNumber(i);
 
             if(i > 0)
             {
                 _robotsStack.Peek().SetNextRobot(robot);
+                robot.SetAfterRobot(_robotsStack.Peek());
             }
 
             _robotsStack.Push(robot);

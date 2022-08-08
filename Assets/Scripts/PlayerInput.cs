@@ -26,6 +26,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private Sprite _spriteHack;
     [SerializeField] private Sprite _spriteHackUz;
 
+
     private void Start()
     {
         _gameController = FindObjectOfType<GameController>();
@@ -34,7 +35,7 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        if(_delay > 0.2)
+        if(_delay > 0.5)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -58,7 +59,7 @@ public class PlayerInput : MonoBehaviour
 
     public void Attack()
     {
-        if (_delay > 0.2)
+        if (_delay > 0.5 && _gameController.GetIsActiveGame())
         {
             _buttonAttack.gameObject.GetComponent<AudioSource>().Play();
             ChangeSprite(imageAttack, _spriteAttackUz, _spriteAttack);
@@ -70,7 +71,7 @@ public class PlayerInput : MonoBehaviour
 
     public void Deeffence()
     {
-        if (_delay > 0.2)
+        if (_delay > 0.5 && _gameController.GetIsActiveGame())
         {
             _buttonDeffense.gameObject.GetComponent<AudioSource>().Play();
             ChangeSprite(imageDefence, _spriteDefenceUz, _spriteDefence);
@@ -82,7 +83,7 @@ public class PlayerInput : MonoBehaviour
 
     public void Hacking()
     {
-        if (_delay > 0.2)
+        if (_delay > 0.5 && _gameController.GetIsActiveGame())
         {
             _buttonHacking.gameObject.GetComponent<AudioSource>().Play();
             ChangeSprite(imageHack, _spriteHackUz, _spriteHack);
@@ -101,7 +102,7 @@ public class PlayerInput : MonoBehaviour
 
     IEnumerator OffChangeSprite(Image image, Sprite offsprite)
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         image.sprite = offsprite;
     }
 }
