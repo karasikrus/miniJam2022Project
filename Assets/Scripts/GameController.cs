@@ -8,6 +8,9 @@ using System;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] GameObject _winScreen;
+    [SerializeField] Button _winButton;
+
     [SerializeField] GameObject _ScreenDead;
 
     private bool _isActiveGame = false;
@@ -270,12 +273,27 @@ public class GameController : MonoBehaviour
 
     private void GoNextLevel()
     {
-        _rightDoor.GoStartPositionDoor();
-        _leftDoor.GoStartPositionDoor();
-        _leftDoor.PlayCloseSound();
-        _level++;
-        PlayerPrefs.SetInt("Level", _level);
-        StartCoroutine(DoNextLevel());
+        if(_level > 5)
+        {
+            _winScreen.SetActive(true);
+            _isActiveGame = false;
+            _goTimer = false;
+            foreach (Button button in _buttons)
+            {
+                button.gameObject.SetActive(false);
+            }
+            _winButton.gameObject.SetActive(true);
+
+        }
+        else
+        {
+            _rightDoor.GoStartPositionDoor();
+            _leftDoor.GoStartPositionDoor();
+            _leftDoor.PlayCloseSound();
+            _level++;
+            PlayerPrefs.SetInt("Level", _level);
+            StartCoroutine(DoNextLevel());
+        }
     }
 
     public void StartGame()
@@ -304,6 +322,19 @@ public class GameController : MonoBehaviour
         StartCoroutine(DoNextLevel());
     }
 
+    public void GoMenu()
+    {
+        if (_robotsStack.Count > 0)
+        {
+            _robotsStack.Peek().gameObject.SetActive(false);
+        }
+        _ScreenDead.GetComponent<GameImageScript>().GoOpacityMinus();
+        _rightDoor.GoStartPositionDoor();
+        _leftDoor.GoStartPositionDoor();
+        _leftDoor.PlayCloseSound();
+        StartCoroutine(DoMenu());
+    }
+
     public bool GetIsActiveGame()
     {
         return _isActiveGame;
@@ -313,5 +344,11 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    IEnumerator DoMenu()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene("Menu");
     }
 }
