@@ -1400,7 +1400,7 @@ MonoBehaviour:
   _endButtons:
   - {fileID: 1641853616}
   - {fileID: 602467947}
-  _level: 0
+  _level: 6
   _textMeshProTimer: {fileID: 529388045}
   _textMeshProRules: {fileID: 1462382531}
   _rulesArray:

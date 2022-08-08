@@ -81,21 +81,21 @@ public class GameController : MonoBehaviour
 
         }
 
-        if(_level > 2)
-        {
-            foreach (Robot robot in _robotsStack)
-            {
-                if (robot.GetNumber() % 2 != 0)
-                {
-                    Robot nextRobot = robot.GetNextRobot();
-                    if ( nextRobot != null && robot.GetColor() == "Red")
-                    {
-                        nextRobot.SetTypeRobot(0);
-                    }
-                }
-            }
+        //if(_level > 2)
+        //{
+        //    foreach (Robot robot in _robotsStack)
+        //    {
+        //        if (robot.GetNumber() % 2 != 0)
+        //        {
+        //            Robot nextRobot = robot.GetNextRobot();
+        //            if ( nextRobot != null && robot.GetColor() == "Red")
+        //            {
+        //                nextRobot.SetTypeRobot(0);
+        //            }
+        //        }
+        //    }
 
-        }
+        //}
 
         if(_level > 3)
         {
@@ -109,12 +109,12 @@ public class GameController : MonoBehaviour
 
             foreach (Robot robot in _robotsStack)
             {
-                if(robot.GetColor() == "Yellow")
+                if(robot.GetColor() == "Blue")
                 {
-                    Robot nextRobot = robot.GetNextRobot();
-                    if (nextRobot != null && nextRobot.GetColor() == "Blue")
+                    Robot afterRobot = robot.GetAfterRobot();
+                    if (afterRobot != null && afterRobot.GetColor() == "Yellow")
                     {
-                        nextRobot.SetTypeRobot(2);
+                        robot.SetTypeRobot(2);
                     }
                 }
             }

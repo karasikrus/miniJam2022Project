@@ -8,6 +8,7 @@ public class NextLevel : MonoBehaviour
     [SerializeField] private string _name;
    public void GoNextLevel()
    {
+        PlayerPrefs.DeleteAll();
         SceneManager.LoadScene(_name);
     }
 }
