@@ -109,12 +109,12 @@ public class GameController : MonoBehaviour
 
             foreach (Robot robot in _robotsStack)
             {
-                if(robot.GetColor() == "Blue")
+                if(robot.GetColor() == "Yellow")
                 {
                     Robot nextRobot = robot.GetNextRobot();
-                    if (nextRobot != null && nextRobot.GetColor() == "Yellow")
+                    if (nextRobot != null && nextRobot.GetColor() == "Blue")
                     {
-                        robot.SetTypeRobot(2);
+                        nextRobot.SetTypeRobot(2);
                     }
                 }
             }
